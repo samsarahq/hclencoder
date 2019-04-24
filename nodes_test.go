@@ -427,11 +427,11 @@ func TestTokenize(t *testing.T) {
 			false,
 		},
 		{
-			"unsupported",
-			reflect.ValueOf(uint8(1)),
+			"string - multiline",
+			reflect.ValueOf("asdf\njkl;"),
 			false,
-			token.Token{},
-			true,
+			token.Token{Type: token.IDENT, Text: "<<EOF\nasdf\njkl;\nEOF"},
+			false,
 		},
 	}
 

@@ -303,6 +303,12 @@ func tokenize(in reflect.Value, ident bool) (t token.Token, err error) {
 		}, nil
 
 	case reflect.String:
+		if isMultiline(in.String()) {
+			return token.Token{
+				Type: token.IDENT,
+				Text: heredoc(in.String()),
+			}, nil
+		}
 		if ident {
 			return token.Token{
 				Type: token.IDENT,
@@ -393,4 +399,12 @@ func (ol objectItems) Less(i, j int) bool {
 		return iKeys[k].Token.Text < jKeys[k].Token.Text
 	}
 	return len(iKeys) <= len(jKeys)
+}
+
+func isMultiline(s string) bool {
+	return strings.Contains(s, "\n")
+}
+
+func heredoc(s string) string {
+	return fmt.Sprintf("<<EOF\n%s\nEOF", s)
 }
