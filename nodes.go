@@ -21,6 +21,10 @@ const (
 	// the parent object block's key, not a property of that block
 	KeyTag string = "key"
 
+		// For purposes of cutover to use gohcl library instead of hclencoder, we 
+	// want to treat "label" the same way as key
+	LabelTag string = "label"
+
 	// SquashTag is attached to anonymous fields of a struct and indicates
 	// to the encoder to lift the fields of that value into the parent
 	// block's scope transparently. Otherwise, the field's type is used as
@@ -342,6 +346,8 @@ func extractFieldMeta(f reflect.StructField) (meta fieldMeta) {
 		for _, tag := range tags[1:] {
 			switch tag {
 			case KeyTag:
+				meta.key = true
+			case LabelTag:
 				meta.key = true
 			case SquashTag:
 				meta.squash = true
